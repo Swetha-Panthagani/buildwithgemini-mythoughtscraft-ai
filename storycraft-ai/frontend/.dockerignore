@@ -1,0 +1,4 @@
+.venv_frontend
+__pycache__
+*.pyc
+run_frontend.sh
