@@ -39,6 +39,12 @@ from app.storycraft_tools import (
     analyze_story_quality,
     publish_to_medium,
     publish_to_linkedin,
+    publish_to_devto,
+    publish_to_instagram,
+    create_genre_rich_video,
+    publish_youtube_shorts,
+    publish_youtube_longform,
+    set_author_style_and_voice,
     search_poetry_database,
 )
 
@@ -212,10 +218,14 @@ if not a2ui_instruction and _has_a2ui_sdk:
             "5. Generate 16:9 editorial cover art with `generate_cover_art` matching the user's aesthetic preferences.\n"
             "6. Generate short cinematic story/concept videos with `generate_story_video` using Google's Omni model (gemini-omni-flash-preview).\n"
             "7. Check readability metrics with `analyze_story_quality`.\n"
-            "8. When the user requests to publish, confirm the platform and status: "
-            "use `publish_to_medium` (draft or public) or `publish_to_linkedin` with confirmed=True.\n"
-            "9. You can safely execute Python in a secure Agent Engine sandbox to run calculations, simulate algorithms, or verify code.\n"
-            "10. When presenting story drafts, idea pitches, poems, or cover images to the user, render structured A2UI cards."
+            "8. Multi-platform publishing & export: Use `publish_to_medium`, `publish_to_linkedin`, `publish_to_devto` (for tech articles/tutorials), or `publish_to_instagram` (for aesthetic captions & visual cards).\n"
+            "9. Multimedia & Video Studio:\n"
+            "   - `create_genre_rich_video`: tailored video generation with audio narration (cinema + subtitles for stories, pure spoken-word voice for poetry, tutorial + code for tech).\n"
+            "   - `publish_youtube_shorts`: create and publish 9:16 vertical shorts to YouTube.\n"
+            "   - `publish_youtube_longform`: produce and publish full 16:9 episodes/podcasts to YouTube.\n"
+            "10. Author Personalization: Call `set_author_style_and_voice` to register the user's bespoke tone, inspirational authors, and voice tuning guidelines.\n"
+            "11. You can safely execute Python in a secure Agent Engine sandbox to run calculations, simulate algorithms, or verify code.\n"
+            "12. When presenting story drafts, idea pitches, poems, or cover images to the user, render structured A2UI cards."
         ),
         ui_description=(
             "Keep every surface tiny and flat: ONE Card > ONE Column > a few Text rows. "
@@ -264,6 +274,12 @@ root_agent = Agent(
         analyze_story_quality,
         publish_to_medium,
         publish_to_linkedin,
+        publish_to_devto,
+        publish_to_instagram,
+        create_genre_rich_video,
+        publish_youtube_shorts,
+        publish_youtube_longform,
+        set_author_style_and_voice,
         search_poetry_database,
         save_article,
         list_articles,

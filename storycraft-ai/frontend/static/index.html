@@ -278,10 +278,45 @@
   .a2text.a2-h2 { font-size: 1.2rem; font-weight: 700; color: #334155; }
   .a2text.a2-h3 { font-size: 1.05rem; font-weight: 600; color: #475569; }
   .a2text.a2-h4 { font-size: 0.95rem; font-weight: 600; color: #475569; }
-  .a2text.a2-caption { font-size: 0.85rem; color: #64748b; }
-  .a2divider { border: none; border-top: 1px solid var(--border); margin: 0.5rem 0; width: 100%; }
   .a2img { max-width: 100%; border-radius: 10px; display: block; box-shadow: var(--shadow-sm); }
   .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-size: 1.25rem; line-height: 1; vertical-align: middle; color: var(--accent); }
+
+  /* Card Action Bar (Export to Markdown, Copy to Medium/LinkedIn) */
+  .card-action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--border);
+  }
+  .act-btn {
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: none;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .act-btn:hover {
+    background: var(--accent-light);
+    color: #5b21b6;
+    border-color: #c4b5fd;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(124, 58, 237, 0.15);
+  }
+  .act-btn.copied {
+    background: #ecfdf5;
+    color: #047857;
+    border-color: #a7f3d0;
+  }
 </style>
 </head>
 <body>
@@ -450,6 +485,55 @@ function renderReply(b, parts) {
     b.classList.add("rich");
     if (!renderSurface(a2ui, b)) b.appendChild(el("div", null, flattenText(a2ui) || "(no card content)"));
   }
+
+  // Inject Quick Action Bar for Medium / Markdown / LinkedIn
+  const cardElem = b.querySelector(".a2card") || b;
+  const contentToCopy = (textStr ? textStr + "\n\n" : "") + (a2ui.length ? flattenText(a2ui) : "");
+  if (contentToCopy.trim()) {
+    const bar = el("div", "card-action-bar");
+    
+    // 1. Export to Markdown
+    const btnMd = el("button", "act-btn", "📥 Export Markdown");
+    btnMd.type = "button";
+    btnMd.onclick = () => {
+      const blob = new Blob([contentToCopy], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "storycraft-draft.md";
+      a.click();
+      URL.revokeObjectURL(url);
+      btnMd.textContent = "✓ Exported!";
+      btnMd.classList.add("copied");
+      setTimeout(() => { btnMd.textContent = "📥 Export Markdown"; btnMd.classList.remove("copied"); }, 2500);
+    };
+
+    // 2. Copy for Medium
+    const btnMedium = el("button", "act-btn", "📝 Copy for Medium");
+    btnMedium.type = "button";
+    btnMedium.onclick = async () => {
+      await navigator.clipboard.writeText(contentToCopy);
+      btnMedium.textContent = "✓ Copied for Medium!";
+      btnMedium.classList.add("copied");
+      setTimeout(() => { btnMedium.textContent = "📝 Copy for Medium"; btnMedium.classList.remove("copied"); }, 2500);
+    };
+
+    // 3. Copy for LinkedIn
+    const btnLi = el("button", "act-btn", "💼 Copy for LinkedIn");
+    btnLi.type = "button";
+    btnLi.onclick = async () => {
+      await navigator.clipboard.writeText(contentToCopy);
+      btnLi.textContent = "✓ Copied for LinkedIn!";
+      btnLi.classList.add("copied");
+      setTimeout(() => { btnLi.textContent = "💼 Copy for LinkedIn"; btnLi.classList.remove("copied"); }, 2500);
+    };
+
+    bar.appendChild(btnMd);
+    bar.appendChild(btnMedium);
+    bar.appendChild(btnLi);
+    cardElem.appendChild(bar);
+  }
+
   if (!b.childNodes.length) b.textContent = "(no response)";
   log.scrollTop = log.scrollHeight;
 }
