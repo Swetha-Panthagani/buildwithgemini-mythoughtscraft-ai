@@ -1,198 +1,88 @@
 <div align="center">
 
-<img src="assets/build-with-gemini-banner.png" alt="Build with Gemini" width="100%" />
+# ✍️ StoryCraft AI
 
-# 🚀 Build with Gemini · Track 3
+### A multi-agent writing studio that turns a rough idea into a finished, illustrated post, and publishes it only after you say yes.
 
-### The starter kit for Track 3 of the Build with Gemini World Tour, and a showcase of what participants built with it.
+![Gemini](https://img.shields.io/badge/Gemini-ADK%20multi--agent-4285F4?logo=googlegemini&logoColor=white)
+![Google Cloud](https://img.shields.io/badge/Google%20Cloud-Agent%20Platform%20%7C%20Firestore%20%7C%20GCS-4285F4?logo=googlecloud&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-A2A%20proxy-009688?logo=fastapi&logoColor=white)
 
-Clone this repo, open [Antigravity](https://antigravity.google), and build your own agent-first app on Google Cloud. Every project in the [gallery below](#-featured-projects) was built the same way: prototyped with Antigravity and `agents-cli`, equipped with Memory, tools, and storage, deployed to Agent Platform, and given a face on Cloud Run.
-
-<br/>
-
-![Build with Gemini](https://img.shields.io/badge/Build%20with%20Gemini-World%20Tour-4285F4?logo=google&logoColor=white)
-![Track 3](https://img.shields.io/badge/Track%203-Agent--First%20Apps-EA4335)
-![Google Cloud](https://img.shields.io/badge/Google%20Cloud-Agent%20Platform-4285F4?logo=googlecloud&logoColor=white)
-![Built with ADK](https://img.shields.io/badge/Built%20with-ADK%20%2B%20agents--cli-34A853)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
-![Projects](https://img.shields.io/badge/Projects-8-blue)
-
-<sub>📖 <a href="https://cszhu.github.io/build-with-gemini/">Lab Guide</a> · 🛠️ <a href="https://google.github.io/agents-cli/guide/getting-started/">agents-cli</a> · 🤖 <a href="https://google.github.io/adk-docs/">ADK</a></sub>
+<img src="demo.gif" alt="StoryCraft AI demo: an idea becomes a drafted, illustrated post" width="100%" />
 
 </div>
 
 ---
 
-## 📚 Table of Contents
+## What it does
 
-- [🧩 Anatomy of a Track 3 Project](#-anatomy-of-a-track-3-project)
-- [📂 Featured Projects](#-featured-projects)
-  - [🛍️ Commerce & Marketplace Agents](#️-commerce--marketplace-agents)
-  - [🍳 Food & Recipe Agents](#-food--recipe-agents)
-  - [✈️ Travel & Local Agents](#️-travel--local-agents)
-  - [💪 Health, Fitness & Wellness Agents](#-health-fitness--wellness-agents)
-  - [📚 Learning & Knowledge Agents](#-learning--knowledge-agents)
-  - [🎨 Creative & Media Agents](#-creative--media-agents)
-  - [🏢 Productivity & Enterprise Agents](#-productivity--enterprise-agents)
-  - [🧪 Experimental & Other](#-experimental--other)
-- [🧠 What's in this Repo](#-whats-in-this-repo)
-- [🧰 Build Your Own](#-build-your-own)
-- [📚 Resources](#-resources)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
+You give StoryCraft a raw idea ("explain vector databases to my mum", "a poem about monsoon in Hyderabad", "chapter one of a short story"). An **Editor-in-Chief** agent then runs the whole pipeline:
 
----
+1. **Grills the idea.** Scores it for clarity and hook (1 to 10), proposes three angles, and asks one or two sharp questions about audience and tone. A 7-turn guardrail stops endless back-and-forth.
+2. **Routes to a specialist writer.**
+   - `tech_simplifier` explains technical topics with ELI5 analogies.
+   - `human_poet` writes cadence-aware poetry (with PoetryDB for inspiration).
+   - `narrative_weaver` writes fiction, personal essays and story series.
+3. **Illustrates it.** Generates a 16:9 editorial cover with Gemini image generation and a short teaser video, and stores both in Cloud Storage.
+4. **Checks quality.** Computes Flesch reading ease, read time and poem rhythm in a sandboxed code executor.
+5. **Publishes with a human in the loop.** Asks "draft or public?" and only then posts to Medium, LinkedIn or DEV (Instagram and YouTube exports are prepared too). Without API tokens it runs in a safe simulated mode.
 
-## 🧩 Anatomy of a Track 3 Project
+It also **remembers you**: preferred tone, audience and publishing style persist across sessions via Vertex AI Memory Bank.
 
-Every app in this collection is built from the same set of Google Cloud building blocks introduced in the lab. Once you understand this shape, you can read any project here at a glance:
+## Architecture
 
-| Layer | What it does | Powered by |
-|---|---|---|
-| 🤖 **The Agent** | The core reasoning loop | [ADK](https://google.github.io/adk-docs/) + [`agents-cli`](https://google.github.io/agents-cli/guide/getting-started/), scaffolded with [Antigravity](https://antigravity.google) |
-| 🧠 **Memory** | Remembers facts across sessions | [Agent Platform Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank) |
-| 🗄️ **Structured data** | Inventory, records, lists | [Firestore](https://console.cloud.google.com/firestore) |
-| 🖼️ **Files & blobs** | Images, media, assets | [Cloud Storage](https://console.cloud.google.com/storage) |
-| 🔧 **Tools** | Take real actions and fetch real data | ADK function tools |
-| 🎨 **Media generation** | Creates images (and video) on demand | `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite) · Omni (video) |
-| 🧪 **Code sandbox** | Safely runs generated code | Agent Platform code execution |
-| 🪟 **Agent-first UI** | Cards and tables instead of plain text | [A2UI](https://adk.dev/integrations/a2ui/) |
-| 🌐 **Frontend** | A shareable web face | FastAPI proxy on [Cloud Run](https://cloud.google.com/run) |
-
----
-
-## 📂 Featured Projects
-
-A showcase of what workshop participants built with this lab. Entries are added here from the swag and gallery submission form after each event, so the categories below start empty and fill in over time. Browse them for inspiration, or [submit your own](#-contributing) once you've published your project with the `publish-to-github` skill.
-
-<!--
-Add one entry per project, in this format:
-- 🌿 **[Project Name](https://github.com/their-handle/their-repo)**: one-line description of what it does. <br/> <sub>by [@handle](https://github.com/handle)</sub>
-
-Bump the "Projects" badge count at the top when you add one.
--->
-
-### 🛍️ Commerce & Marketplace Agents
-
-### 🍳 Food & Recipe Agents
-
-- 🥫 **[Smart Pantry Recipe Concierge](https://github.com/matthewrose/buildwithgemini-smart-pantry-recipe-concierge)**: Tracks your pantry and recommends recipes grounded in a real recipe corpus. <br/> <sub>by [@matthewrose](https://github.com/matthewrose)</sub>
-
-### ✈️ Travel & Local Agents
-
-- ⛈️ **[SafeStageWX](https://github.com/felix1028/buildwithgemini-safestagewx)**: An agentic mobile app that helps event planners identify weather threats and climate risks for an event given its date and location, providing tailored preparedness timelines from months out down to hourly day-of forecasts. <br/> <sub>by [@felix1028](https://github.com/felix1028)</sub>
-- 🌇 **[Sidewalk & Sun](https://github.com/OlafHaalstra/buildwithgemini-sidewalk-and-sun)**: Recommends sunny or shaded NYC spots from a curated 500-venue corpus, plotted on an interactive map. <br/> <sub>by [@OlafHaalstra](https://github.com/OlafHaalstra)</sub>
-
-### 💪 Health, Fitness & Wellness Agents
-
-- 🏊 **[TriCoach AI](https://github.com/common-aman/buildwithgemini-tricoach-ai)**: A triathlon coach that logs workouts, computes training zones, and generates motivational visuals. <br/> <sub>by [@common-aman](https://github.com/common-aman)</sub>
-
-### 📚 Learning & Knowledge Agents
-
-- 🎤 **[Interview Coach (PrepPal)](https://github.com/VineethBaradi/buildwithgemini-interview-coach)**: A mock-interview coach that runs LLM-driven practice sessions from a Firestore question bank and gives performance feedback. <br/> <sub>by [@VineethBaradi](https://github.com/VineethBaradi)</sub>
-
-### 🎨 Creative & Media Agents
-
-### 🏢 Productivity & Enterprise Agents
-
-- 🔧 **[GitCraft](https://github.com/fpobletemu/buildwithgemini-gitcraft)**: A developer git assistant that inspects your repo and drafts Conventional-Commits-style messages, grounded in a commit-style guide. <br/> <sub>by [@fpobletemu](https://github.com/fpobletemu)</sub>
-- 🖥️ **[IT Helpdesk Agent](https://github.com/NaweedAhmadi/buildwithgemini-it-helpdesk-agent)**: An IT support assistant that answers from a knowledge base and remembers context across sessions, with a ticket dashboard UI. <br/> <sub>by [@NaweedAhmadi](https://github.com/NaweedAhmadi)</sub>
-
-### 🧪 Experimental & Other
-
-- 🃏 **[Poker Agent](https://github.com/jakecho1108/buildwithgemini-poker-agent)**: A poker trainer with a real 800-iteration Monte Carlo equity engine and strategy tips grounded in a poker playbook. <br/> <sub>by [@jakecho1108](https://github.com/jakecho1108)</sub>
-
----
-
-## 🧠 What's in this Repo
-
-The `.agents/` folder teaches Antigravity how to build agents on Google Cloud.
-
-### Skills
-
-A **skill** is a bundle of instructions that loads automatically when it's relevant, so the agent gets the workflow right in fewer steps instead of rediscovering it each time.
-
-| Skill | What it does |
-| --- | --- |
-| [`pick-your-agent-project`](.agents/skills/pick-your-agent-project/SKILL.md) | Brainstorm your app idea and write a project brief |
-| [`troubleshoot-lab-setup`](.agents/skills/troubleshoot-lab-setup/SKILL.md) | Verify your environment and fix common setup errors |
-| [`memory-bank-setup`](.agents/skills/setup-memory-bank/SKILL.md) | Add cross-session memory to your agent with Vertex AI Memory Bank |
-| [`enable-a2ui`](.agents/skills/enable-a2ui/SKILL.md) | Make your agent reply with rich UI cards (A2UI) in the ADK dev UI |
-| [`build-agent-frontend`](.agents/skills/build-agent-frontend/SKILL.md) | Generate a FastAPI chat frontend and ship it to Cloud Run |
-| [`record-demo`](.agents/skills/record-demo/SKILL.md) | Record a branded demo video of your agent, with an optional AI soundtrack |
-| [`publish-to-github`](.agents/skills/publish-to-github/SKILL.md) | Publish your finished project to your own GitHub and submit it for swag |
-
-### Pre-configured tools (MCP)
-
-[`.agents/mcp_config.json`](.agents/mcp_config.json) wires up two [Model Context Protocol](https://modelcontextprotocol.io/) servers that authenticate with your gcloud credentials, so the agent can look things up instead of guessing:
-
-- **Firebase**: work directly with Firestore and other Firebase services
-- **Google Developer Knowledge**: grounded access to Google's official docs (Cloud, Firebase, ADK, Agent Platform)
-
-### Layout
-
-```text
-.agents/
-├── mcp_config.json    # Firebase + Developer Knowledge MCP servers
-├── rules/             # workspace rules (only deploy when asked)
-└── skills/            # the workshop skills listed above
+```mermaid
+flowchart LR
+    U([User idea]) --> FE[Web UI<br/>FastAPI + A2A proxy<br/>Cloud Run]
+    FE --> R[Editor-in-Chief agent<br/>Gemini · ADK]
+    R --> T[tech_simplifier]
+    R --> P[human_poet]
+    R --> N[narrative_weaver]
+    R --> M[(Memory Bank)]
+    R --> F[(Firestore<br/>articles & drafts)]
+    R --> G[(Cloud Storage<br/>covers & videos)]
+    R --> S[Code sandbox<br/>readability checks]
+    R --> PUB[Publishers<br/>Medium · LinkedIn · DEV]
 ```
 
----
+| Layer | Tech |
+|---|---|
+| Agents | Google ADK, Gemini, three genre subagents |
+| Memory | Vertex AI Memory Bank |
+| Data | Firestore (`storycraft_articles`) |
+| Media | Gemini image generation, Omni video, Cloud Storage |
+| UI | A2UI cards (genre badge, read time, cover preview, status) |
+| Frontend | FastAPI A2A proxy on Cloud Run |
+| Deploy | `agents-cli` to Agent Platform, Terraform in `storycraft-ai/deployment/` |
 
-## 🧰 Build Your Own
+Full tool specs are in [`storycraft-ai/ARCHITECTURE.md`](storycraft-ai/ARCHITECTURE.md).
 
-The full, step-by-step walkthrough lives on the **[lab guide](https://cszhu.github.io/build-with-gemini/)**. This is the short version.
-
-**Prerequisites** (the lab workstation comes with all of this pre-installed; you'll need it if you're running on your own machine):
-
-- A **Google Cloud project** with billing enabled
-- **[Antigravity](https://antigravity.google)** (`agy`), the coding agent that loads the skills above
-- **[agents-cli](https://google.github.io/agents-cli/guide/getting-started/)**, built on the [Agent Development Kit (ADK)](https://google.github.io/adk-docs/)
-- Authenticated gcloud: `gcloud auth login` and `gcloud auth application-default login`
-- A personal **GitHub account** for the final publish-and-submit step
-
-**Quickstart:**
+## Run it locally
 
 ```bash
-git clone https://github.com/cszhu/build-with-gemini
-cd build-with-gemini
-agy
+cd storycraft-ai
+cp .env.example .env          # set your GCP project, or a GEMINI_API_KEY
+uv sync
+uv run agents-cli playground  # local ADK web UI
 ```
 
-On startup, Antigravity scans the `.agents/` folder and loads the skills and tools above automatically. In the AGY prompt:
+Frontend, deployment and project layout are documented in [`storycraft-ai/README.md`](storycraft-ai/README.md).
 
-```text
-/skills            # see the installed skills
-/mcp               # confirm the firebase + google-developer-knowledge tools are connected
-```
+## Repository layout
 
-```text
-Verify my setup.   # runs the troubleshoot-lab-setup skill to check your environment
-```
+| Path | What's there |
+|---|---|
+| `storycraft-ai/` | The agent, tools, frontend, tests and deployment config |
+| `project_brief.md` | Original product brief and phase-by-phase workflow spec |
+| `demo.gif`, `storycraft_agent_demo*.mp4` | Demo recordings |
+| `record_demo.py`, `generate_lofi_music.py` | Scripts used to record the demo and its soundtrack |
+| `.agents/` | Antigravity skills and MCP config from the workshop starter kit |
 
-Then follow the [lab guide](https://cszhu.github.io/build-with-gemini/) to design, build, deploy, and share your agent, start to finish.
+## Credits
 
----
+Built during the **Build with Gemini World Tour (Track 3: agent-first apps)**, starting from Google's workshop starter kit. The starter kit is not an officially supported Google product.
 
-## 📚 Resources
+## About me
 
-- **[Lab guide](https://cszhu.github.io/build-with-gemini/)**: the step-by-step workshop
-- [Antigravity](https://antigravity.google)
-- [agents-cli](https://google.github.io/agents-cli/guide/getting-started/)
-- [Agent Development Kit (ADK)](https://google.github.io/adk-docs/)
-- [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform)
-
----
-
-## 🤝 Contributing
-
-**Built something?** Publish it with the `publish-to-github` skill and submit it through the form it gives you. Submissions get you swag, and standout projects get added to the [Featured Projects](#-featured-projects) gallery above.
-
-**Found a bug?** If you hit a rough edge in a skill or the lab, please [open an issue](https://github.com/cszhu/build-with-gemini/issues).
-
----
-
-## 📄 License
-
-This is not an officially supported Google product and is provided for the Build with Gemini workshop for demonstration purposes only.
+Built by **Swetha Panthagani**, GenAI engineer. I build multi-agent apps, RAG assistants and LLM automations for businesses. [LinkedIn](https://www.linkedin.com/in/swetha-panthagani/)
